@@ -4,6 +4,7 @@ from app.auth import signup as auth_signup, signin as auth_signin
 from app.auth import authenticate_salesforce
 from app.employee import get_employee_data, create_employee, update_employee, get_employee_data_by_email
 from app.state import employee_users  # Import from app.state instead
+from app.auth import users_collection  # Import users collection from auth.py
 
 sf = None  # Global inside routes.py
 
@@ -73,20 +74,23 @@ def signin_form():
         user = employee_users.get(email)
 
         if not user:
-            if sf:
-                employee_data = get_employee_data_by_email(sf, email)
-                if not employee_data:
-                    return "User not found in Salesforce", 404
+            # Check if user exists in the database (MongoDB)
+            user = users_collection.find_one({'email': email})
+            if not user:
+                if sf:
+                    employee_data = get_employee_data_by_email(sf, email)
+                    if not employee_data:
+                        return "User not found in Salesforce", 404
 
-                user = {
-                    "name": employee_data["Name"],
-                    "email": employee_data["Email"],
-                    "phone_number": employee_data["Phone"],
-                    "sf_id": employee_data["Id"]
-                }
-                employee_users[email] = user
-            else:
-                return "Salesforce not authenticated", 500
+                    user = {
+                        "name": employee_data["Name"],
+                        "email": employee_data["Email"],
+                        "phone_number": employee_data["Phone"],
+                        "sf_id": employee_data["Id"]
+                    }
+                    employee_users[email] = user
+                else:
+                    return "Salesforce not authenticated", 500
 
         # ✅ Set session values, including sf_id
         session['email'] = user['email']
@@ -227,6 +231,4 @@ def update_profile_submit():
     return "Salesforce not authenticated or user ID missing", 500
 
 if __name__ == "__main__":
-    app.run(debug=True) 
-
-
+    app.run(debug=True)

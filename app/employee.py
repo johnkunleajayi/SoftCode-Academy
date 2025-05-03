@@ -1,15 +1,25 @@
+import logging
 from simple_salesforce import SalesforceResourceNotFound
-from app.auth import authenticate_salesforce
+
+# Setup logging configuration
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def get_employee_data(sf, employee_id):
     """
     Fetch employee data from Salesforce by Employee ID.
     """
+
+    from app.auth import authenticate_salesforce
+
     try:
         employee = sf.Student__c.get(employee_id)  # Students are stored as 'Student__c' records
         return employee
     except SalesforceResourceNotFound:
-        print(f"Employee with ID {employee_id} not found.")
+        logger.error(f"Employee with ID {employee_id} not found.")
+        return None
+    except Exception as e:
+        logger.error(f"Error fetching employee data: {e}")
         return None
 
 def create_employee(sf, name, email, phone_number, password):
@@ -22,15 +32,14 @@ def create_employee(sf, name, email, phone_number, password):
             'Full_Name__c': name,
             'Email__c': email,
             'Phone_Number__c': phone_number,
-            'Password__c': password  # Store password as a custom field
+            'Password__c': password  # Store password as a custom field (ensure it's hashed)
         })
-        print(f"Student created created with ID: {employee['id']}")
+        logger.info(f"Employee created with ID: {employee['id']}")
         return employee
     except Exception as e:
-        print(f"Error creating employee: {e}")
+        logger.error(f"Error creating employee: {e}")
         return None
-    
-    
+
 def get_employee_data_by_email(sf, email):
     try:
         query = f"SELECT Id, Name, Email__c, Phone_Number__c FROM Student__c WHERE Email__c = '{email}' LIMIT 1"
@@ -40,9 +49,8 @@ def get_employee_data_by_email(sf, email):
             return records[0]
         return None
     except Exception as e:
-        print(f"Error fetching employee by email: {e}")
+        logger.error(f"Error fetching employee by email: {e}")
         return None
-
 
 def update_employee(sf, employee_id, name=None, email=None, phone_number=None, password=None):
     """
@@ -63,14 +71,13 @@ def update_employee(sf, employee_id, name=None, email=None, phone_number=None, p
         
         if updates:
             sf.Student__c.update(employee_id, updates)
-            print(f"Employee with ID {employee_id} updated.")
+            logger.info(f"Employee with ID {employee_id} updated.")
         else:
-            print("No updates provided.")
+            logger.warning("No updates provided.")
         return True
-
     except SalesforceResourceNotFound:
-        print(f"Employee with ID {employee_id} not found.")
+        logger.error(f"Employee with ID {employee_id} not found.")
         return False
     except Exception as e:
-        print(f"Error updating employee: {e}")
+        logger.error(f"Error updating employee: {e}")
         return False
