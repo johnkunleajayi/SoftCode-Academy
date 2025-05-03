@@ -1,0 +1,4 @@
+Flask==2.2.3
+Flask-JWT-Extended==4.4.4
+python-dotenv==1.1.0
+simple-salesforce==1.11.1
