@@ -1,30 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Dashboard - Hot HR</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Hot HR</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="dashboard">
-    <header>
-        <div class="logo">
-            <img src="{{ url_for('static', filename='SoftCode Academy.png') }}" alt="SoftCode Academy Logo" />
-        </div>
-        <h1>Welcome, {{ name }}!</h1>
-        <form action="/signout" method="POST">
-            <button type="submit" class="signout-btn">Sign Out</button>
-        </form>
-    </header>
+  <header class="dashboard-header">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='SoftCode Academy.png') }}" alt="SoftCode Academy Logo" />
+    </div>
+    <h1>Welcome, {{ name }}!</h1>
+    <form action="/signout" method="POST">
+      <button type="submit" class="signout-btn">Sign Out</button>
+    </form>
+  </header>
 
-    <main>
-        <div class="dashboard-card">
-            <h2>Your Profile</h2>
-            <p><strong>Name:</strong> {{ name }}</p>
-            <p><strong>Email:</strong> {{ email }}</p>
-            <p><strong>Phone:</strong> {{ phone }}</p>
-    
+  <main class="dashboard-main">
+    <div class="profile-sidebar">
+      <div class="profile-image">
+        {{ image | safe }}
+      </div>
+      <div class="basic-info">
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Username:</strong> {{ username }}</p>
+        <p><strong>Status:</strong> {{ status }}</p>
+      </div>
+    </div>
+
+    <div class="profile-details">
+      <h2>Your Profile Details</h2>
+      <p><strong>Email:</strong> {{ email }}</p>
+      <p><strong>Phone:</strong> {{ phone }}</p>
+      <div class="assignments_completed-container">
+        <div class="assignments_completed-label">
+            Assignments Completed: {{ (assignments_completed or 0)|round(0) }}%
         </div>
-    </main>
+        <div class="assignments_completed-bar">
+            <div class="assignments_completed-fill" style="width: {{ assignments_completed or 0 }}%;"></div>
+        </div>
+    </div>
+      <div class="progress-container">
+        <div class="progress-label">
+            Progress Percentage: {{ (progress or 0)|round(0) }}%
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ progress or 0 }}%;"></div>
+        </div>
+    </div>
+      <p><strong>Date of Birth:</strong> {{ dob or 'NA' }}</p>
+      <p><strong>Enrollment Date:</strong> {{ enrolldate or 'NA' }}</p>
+      <p><strong>Final Grade:</strong> {{ grade or 'NA' }}</p>
+      <p><strong>Graduation Date:</strong> {{ grad or 'NA' }}</p>
+      <p><strong>Instructor's Comments:</strong> {{ comment or 'NA' }}</p>
+      <p><strong>Skills:</strong> {{ skills or 'NA' }}</p>
+      <p><strong>Training Plan:</strong> {{ tplan or 'NA' }}</p>
+    </div>
+  </main>
 </body>
 </html>

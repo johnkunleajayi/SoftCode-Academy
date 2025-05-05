@@ -13,8 +13,6 @@ def set_salesforce_client(salesforce_client):
     sf = salesforce_client
 
 
-# In-memory user store (temporary, used for display purposes)
-employee_users = {}
 
 # Salesforce instance
 sf = authenticate_salesforce()
@@ -119,11 +117,29 @@ def dashboard():
     if 'email' not in session:
         return redirect(url_for('signin_page'))
 
+    user_email = session.get('email')
+    employee_data = get_employee_data_by_email(sf, user_email)
+
+    if not employee_data:
+        return "User not found in Salesforce", 404
+
     return render_template(
         'dashboard.html',
-        name=session.get('name'),
-        email=session.get('email'),
-        phone=session.get('phone')
+        name=employee_data.get('Full_Name__c'),
+        email=employee_data.get('Email__c'),
+        phone=employee_data.get('Phone_Number__c'),
+        assignments_completed=employee_data.get('Assignment_Completed__c', 0),
+        dob=employee_data.get('Date_of_Birth__c'),
+        enrolldate=employee_data.get('Enrollment_Date__c'),
+        grade=employee_data.get('Final_Grade__c'),
+        grad=employee_data.get('Graduation_Date__c'),
+        comment=employee_data.get('Instructor_s_Comments__c'),
+        image=employee_data.get('Profile_Image__c'),
+        progress=employee_data.get('Progress_Percentage__c'),
+        skills=employee_data.get('Skills__c'),
+        status=employee_data.get('Status__c'),
+        tplan=employee_data.get('Training_Plan__c'),
+        username=employee_data.get('Username__c')
     )
 
 # Signout route
