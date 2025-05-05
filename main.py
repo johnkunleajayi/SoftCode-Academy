@@ -39,4 +39,5 @@ if __name__ == "__main__":
     else:
         print("❌ Salesforce authentication failed.")
 
-    app.run(debug=True)
+# Do not use app.run(debug=True) in production
+    app.run(debug=False, host='0.0.0.0', port=5000)
