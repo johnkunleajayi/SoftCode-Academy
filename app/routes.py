@@ -118,7 +118,7 @@ from bs4 import BeautifulSoup
 
 @app.route('/dashboard')
 def dashboard():
-    print("🔥 DEBUG: Entered /dashboard route")
+    print("🔥 DEBUG: Entered /dashboard route", flush=True)
     if 'email' not in session:
         return redirect(url_for('signin_page'))
 
@@ -131,10 +131,10 @@ def dashboard():
     # Extract image URL from rich text field using BeautifulSoup
     image_rtf = employee_data.get('Profile_Image__c', '')
     soup = BeautifulSoup(image_rtf, 'html.parser')
-    print("🧠 DEBUG: Using BeautifulSoup on:", image_rtf)
+    print("🧠 DEBUG: Using BeautifulSoup on:", image_rtf, flush=True)
     img_tag = soup.find('img')
     image_url = img_tag['src'] if img_tag and img_tag.has_attr('src') else None
-    print("🎯 Extracted Image URL:", image_url)
+    print("🎯 Extracted Image URL:", image_url, flush=True)
 
     print("Extracted Image URL:", image_url)
     print("🎯 Running BeautifulSoup on Render")
