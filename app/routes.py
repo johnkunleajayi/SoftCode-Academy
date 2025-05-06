@@ -134,6 +134,7 @@ def dashboard():
     image_url = img_tag['src'] if img_tag and img_tag.has_attr('src') else None
 
     print("Extracted Image URL:", image_url)
+    print("🎯 Running BeautifulSoup on Render")
 
     return render_template(
         'dashboard.html',
