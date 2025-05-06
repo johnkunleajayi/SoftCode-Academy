@@ -5,6 +5,8 @@ from app.auth import authenticate_salesforce
 from app.employee import get_employee_data, create_employee, update_employee, get_employee_data_by_email
 from app.state import employee_users  # Import from app.state instead
 from app.auth import users_collection  # Import users collection from auth.py
+from bs4 import BeautifulSoup
+
 
 sf = None  # Global inside routes.py
 
@@ -111,7 +113,9 @@ def signin_token():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-# Dashboard page (GET)
+from flask import render_template, redirect, url_for, session
+from bs4 import BeautifulSoup
+
 @app.route('/dashboard')
 def dashboard():
     if 'email' not in session:
@@ -122,6 +126,14 @@ def dashboard():
 
     if not employee_data:
         return "User not found in Salesforce", 404
+
+    # Extract image URL from rich text field using BeautifulSoup
+    image_rtf = employee_data.get('Profile_Image__c', '')
+    soup = BeautifulSoup(image_rtf, 'html.parser')
+    img_tag = soup.find('img')
+    image_url = img_tag['src'] if img_tag and img_tag.has_attr('src') else None
+
+    print("Extracted Image URL:", image_url)
 
     return render_template(
         'dashboard.html',
@@ -134,13 +146,15 @@ def dashboard():
         grade=employee_data.get('Final_Grade__c'),
         grad=employee_data.get('Graduation_Date__c'),
         comment=employee_data.get('Instructor_s_Comments__c'),
-        image=employee_data.get('Profile_Image__c'),
+        image_url=image_url,
         progress=employee_data.get('Progress_Percentage__c'),
         skills=employee_data.get('Skills__c'),
         status=employee_data.get('Status__c'),
         tplan=employee_data.get('Training_Plan__c'),
         username=employee_data.get('Username__c')
     )
+
+
 
 # Signout route
 @app.route('/signout', methods=['POST'])
