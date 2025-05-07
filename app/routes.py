@@ -139,7 +139,6 @@ def dashboard():
         email=employee_data.get('Email__c'),
         phone=employee_data.get('Phone_Number__c'),
         assignments_completed=employee_data.get('Assignment_Completed__c', 0),
-        dob=employee_data.get('Date_of_Birth__c'),
         enrolldate=employee_data.get('Enrollment_Date__c'),
         grade=employee_data.get('Final_Grade__c'),
         grad=employee_data.get('Graduation_Date__c'),
