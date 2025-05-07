@@ -1,5 +1,5 @@
 from app.auth import signup, signin, authenticate_salesforce
-from app.employee import get_employee_data, create_employee
+from app.student import get_student_data, create_student
 from app.routes import app, set_salesforce_client  # ✅ this brings in your Flask app + setter
 
 def run_tests():
@@ -19,10 +19,10 @@ def run_tests():
     sf = authenticate_salesforce()
     if sf:
         print("Salesforce authenticated successfully.")
-        new_employee = create_employee(sf, "peter Doe", "peter.doe@example.com", "123-456-7890", "password123")
-        if new_employee:
-            employee_data = get_employee_data(sf, new_employee['id'])
-            print("Employee Data:", employee_data)
+        new_student = create_student(sf, "peter Doe", "peter.doe@example.com", "123-456-7890", "password123")
+        if new_student:
+            student_data = get_student_data(sf, new_student['id'])
+            print("Student Data:", student_data)
     else:
         print("Salesforce Authentication failed.")
 

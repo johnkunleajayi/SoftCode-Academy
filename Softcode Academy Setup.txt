@@ -9,16 +9,11 @@ SALESFORCE_SECURITY_TOKEN=sWk7J8Flvh2jE9cQO845ntD9
 MONGO_URI=mongodb+srv://john:April19thsoftcode@cluster0.a1j72.mongodb.net/Python?retryWrites=true&w=majority&appName=Cluster0
 
 
-PythonAnywhere: aanukunleajayi@gmail.com
-
-site: https://softcodeacademy.pythonanywhere.com/
-
-
 
 SoftCode Academy/
 ├── app/
 │   ├── auth.py                
-│   ├── employee.py            
+│   ├── student.py            
 │   ├── state.py               
 │   ├── routes.py              
 │   ├── static/                
@@ -32,66 +27,18 @@ SoftCode Academy/
 ├── main.py                    
 ├── .env                       
 └── README.md   
+    
 
 
-          Python Anywhere:
-
-1. Upload Your Project Files Directly (If Not Using GitHub)
-If you’re not using GitHub, you can upload your files directly from VS Code to PythonAnywhere:
-
-Go to the Files tab in PythonAnywhere.
-
-Click the Upload a file button to upload the files from your local project (main.py, templates/, static/, etc.) to the appropriate directory (/home/softcodeDev/mysite/).
-
-2. Install Dependencies on PythonAnywhere
-(e.g., Flask, simple_salesforce).
-
-3. Open a Bash Console in PythonAnywhere.
-
-Navigate to your project directory:
-
-cd /home/softcodeacademy/mysite
-
-Install your app’s dependencies (make sure you have a requirements.txt file in your project:
-
-Install the dependencies:
-
-pip install -r requirements.txt
+We have to use Render: 
 
 
-4. Configure the Web App. Now, let’s link the app to the web interface on PythonAnywhere.
-
-In the PythonAnywhere Dashboard, go to the Web tab.
+pip install gunicorn
 
 
-In the WSGI configuration file section, click to edit the file (it should open in the editor).
-
-Edit the WSGI configuration file to point to your flask_app.py:
-
-import sys
-import os
-
-project_home = '/home/softcodeacademy/mysite'
-if project_home not in sys.path:
-    sys.path.insert(0, project_home)
-
-from dotenv import load_dotenv
-load_dotenv(os.path.join(project_home, '.env'))
-
-from main import app as application
 
 
-5. Restart the Web App
-After saving the changes to the WSGI configuration file:
 
-Go back to the Web tab on PythonAnywhere.
 
-Click the Reload button to restart your app.
 
-6. Test Your App
-Your Flask app should now be live at the URL E.g: https://softcodedev.pythonanywhere.com/. You can test it by navigating to this URL in your browser.
-
-If everything is set up correctly, your app should be deployed and running smoothly!
-
-     
 

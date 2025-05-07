@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, s
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from app.auth import signup as auth_signup, signin as auth_signin
 from app.auth import authenticate_salesforce
-from app.employee import get_employee_data, create_employee, get_employee_data_by_email
-from app.state import employee_users  # Import from app.state instead
+from app.student import get_student_data, create_student, get_student_data_by_email
+from app.state import student_users  # Import from app.state instead
 from app.auth import users_collection  # Import users collection from auth.py
 from bs4 import BeautifulSoup
 
@@ -46,7 +46,7 @@ def signup_route():
         result = auth_signup(email, password, name, phone)
 
         # Store in-memory data (temporary)
-        employee_users[email] = {
+        student_users[email] = {
             "name": name,
             "email": email,
             "phone_number": phone,
@@ -71,24 +71,24 @@ def signin_form():
 
     try:
         result = auth_signin(email, password)
-        user = employee_users.get(email)
+        user = student_users.get(email)
 
         if not user:
             # Check if user exists in the database (MongoDB)
             user = users_collection.find_one({'email': email})
             if not user:
                 if sf:
-                    employee_data = get_employee_data_by_email(sf, email)
-                    if not employee_data:
+                    student_data = get_student_data_by_email(sf, email)
+                    if not student_data:
                         return "User not found in Salesforce", 404
 
                     user = {
-                        "name": employee_data["Name"],
-                        "email": employee_data["Email"],
-                        "phone_number": employee_data["Phone"],
-                        "sf_id": employee_data["Id"]
+                        "name": student_data["Name"],
+                        "email": student_data["Email"],
+                        "phone_number": student_data["Phone"],
+                        "sf_id": student_data["Id"]
                     }
-                    employee_users[email] = user
+                    student_users[email] = user
                 else:
                     return "Salesforce not authenticated", 500
 
@@ -124,31 +124,31 @@ def dashboard():
         return redirect(url_for('signin_page'))
 
     user_email = session.get('email')
-    employee_data = get_employee_data_by_email(sf, user_email)
+    student_data = get_student_data_by_email(sf, user_email)
 
-    if not employee_data:
+    if not student_data:
         return "User not found in Salesforce", 404
 
     # Use the public image URL directly
-    image_url = employee_data.get('New_Profile_URL__c')
+    image_url = student_data.get('New_Profile_URL__c')
 
 
     return render_template(
         'dashboard.html',
-        name=employee_data.get('Full_Name__c'),
-        email=employee_data.get('Email__c'),
-        phone=employee_data.get('Phone_Number__c'),
-        assignments_completed=employee_data.get('Assignment_Completed__c', 0),
-        enrolldate=employee_data.get('Enrollment_Date__c'),
-        grade=employee_data.get('Final_Grade__c'),
-        grad=employee_data.get('Graduation_Date__c'),
-        comment=employee_data.get('Instructor_s_Comments__c'),
+        name=student_data.get('Full_Name__c'),
+        email=student_data.get('Email__c'),
+        phone=student_data.get('Phone_Number__c'),
+        assignments_completed=student_data.get('Assignment_Completed__c', 0),
+        enrolldate=student_data.get('Enrollment_Date__c'),
+        grade=student_data.get('Final_Grade__c'),
+        grad=student_data.get('Graduation_Date__c'),
+        comment=student_data.get('Instructor_s_Comments__c'),
         image_url=image_url,
-        progress=employee_data.get('Progress_Percentage__c'),
-        skills=employee_data.get('Skills__c'),
-        status=employee_data.get('Status__c'),
-        tplan=employee_data.get('Training_Plan__c'),
-        username=employee_data.get('Username__c')
+        progress=student_data.get('Progress_Percentage__c'),
+        skills=student_data.get('Skills__c'),
+        status=student_data.get('Status__c'),
+        tplan=student_data.get('Training_Plan__c'),
+        username=student_data.get('Username__c')
     )
 
 
@@ -158,25 +158,25 @@ def signout():
     session.clear()
     return redirect(url_for('signin_page'))
 
-# Get employee by ID (JSON API)
-@app.route('/employees/<employee_id>', methods=['GET'])
+# Get student by ID (JSON API)
+@app.route('/students/<student_id>', methods=['GET'])
 @jwt_required()
-def get_employee(employee_id):
+def get_student(student_id):
     if sf:
-        employee_data = get_employee_data(sf, employee_id)
-        if employee_data:
-            return jsonify(employee_data), 200
-        return jsonify({"error": "Employee not found"}), 404
+        student_data = get_student_data(sf, student_id)
+        if student_data:
+            return jsonify(student_data), 200
+        return jsonify({"error": "Student not found"}), 404
     return jsonify({"error": "Salesforce Authentication failed."}), 500
 
-# Create employee (JSON API)
-@app.route('/employees', methods=['POST'])
+# Create student (JSON API)
+@app.route('/students', methods=['POST'])
 @jwt_required()
-def create_employee_route():
+def create_student_route():
     data = request.get_json()
     if sf:
-        new_employee = create_employee(sf, data['name'], data['email'], data['phone'])
-        return jsonify({"id": new_employee['id']}), 201
+        new_student = create_student(sf, data['name'], data['email'], data['phone'])
+        return jsonify({"id": new_student['id']}), 201
     return jsonify({"error": "Salesforce Authentication failed."}), 500
 
 
@@ -187,12 +187,12 @@ def update_profile():
         return redirect(url_for('signin_page'))
 
     user_email = session.get('email')
-    employee_data = get_employee_data_by_email(sf, user_email)
+    student_data = get_student_data_by_email(sf, user_email)
 
-    if not employee_data:
+    if not student_data:
         return "User not found", 404
 
-    return render_template('update_profile.html', employee=employee_data)
+    return render_template('update_profile.html', student=student_data)
 
 # Save profile updates
 @app.route('/save-profile', methods=['POST'])
@@ -201,12 +201,12 @@ def save_profile():
         return redirect(url_for('signin_page'))
 
     user_email = session.get('email')
-    employee_data = get_employee_data_by_email(sf, user_email)
+    student_data = get_student_data_by_email(sf, user_email)
 
-    if not employee_data:
+    if not student_data:
         return "User not found", 404
 
-    record_id = employee_data['Id']
+    record_id = student_data['Id']
     #Fields to be updated
     updated_fields = {
         'Phone_Number__c': request.form.get('phone'),

@@ -5,7 +5,7 @@ import datetime
 from dotenv import load_dotenv
 from simple_salesforce import Salesforce
 from pymongo import MongoClient
-from app.employee import create_employee  # Correct import
+from app.student import create_student  # Correct import
 
 # Load environment variables
 load_dotenv()
@@ -60,9 +60,9 @@ def signup(email: str, password: str, name: str, phone_number: str):
         raise Exception("Salesforce authentication failed")
 
     # Create student in Salesforce
-    sf_employee = create_employee(sf, name, email, phone_number, password)
-    if not sf_employee:
-        raise Exception("Failed to create employee in Salesforce")
+    sf_student = create_student(sf, name, email, phone_number, password)
+    if not sf_student:
+        raise Exception("Failed to create student in Salesforce")
 
     # Store user in MongoDB (with Salesforce ID)
     user_data = {
@@ -70,7 +70,7 @@ def signup(email: str, password: str, name: str, phone_number: str):
         'password': hashed_password,
         'name': name,
         'phone_number': phone_number,
-        'sf_id': sf_employee['id']
+        'sf_id': sf_student['id']
     }
     users_collection.insert_one(user_data)
 
