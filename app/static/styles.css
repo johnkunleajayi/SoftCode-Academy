@@ -249,6 +249,91 @@ box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
     -ms-transition: width 0.5s ease-in-out;
     -o-transition: width 0.5s ease-in-out;
 }
+
+
+/* UPDATE PROFILE - PAGE SPECIFIC STYLES */
+
+body.update-profile {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.update-profile-container {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+}
+
+.update-profile-container h2 {
+    text-align: center;
+    color: #c90000;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #c90000;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="url"] {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.update-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #c90000;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.update-btn:hover {
+    background-color: #a00e1a;
+}
+
+.back-to-dashboard {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.back-to-dashboard a {
+    text-decoration: none;
+    color: #c90000;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.back-to-dashboard a:hover {
+    color: #a00e1a;
+}
+
+
 @media (max-width: 600px) {
 header {
     flex-direction: column;

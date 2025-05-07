@@ -52,32 +52,3 @@ def get_employee_data_by_email(sf, email):
         logger.error(f"Error fetching employee by email: {e}")
         return None
 
-def update_employee(sf, employee_id, name=None, email=None, phone_number=None, password=None):
-    """
-    Update an existing employee record in Salesforce, including the password field if provided.
-    """
-    try:
-        employee = sf.Student__c.get(employee_id)  # Fetch the existing employee record
-        updates = {}
-
-        if name:
-            updates['Full_Name__c'] = name
-        if email:
-            updates['Email__c'] = email
-        if phone_number:
-            updates['Phone_Number__c'] = phone_number
-        if password:
-            updates['Password__c'] = password  # Update the password field if provided
-        
-        if updates:
-            sf.Student__c.update(employee_id, updates)
-            logger.info(f"Employee with ID {employee_id} updated.")
-        else:
-            logger.warning("No updates provided.")
-        return True
-    except SalesforceResourceNotFound:
-        logger.error(f"Employee with ID {employee_id} not found.")
-        return False
-    except Exception as e:
-        logger.error(f"Error updating employee: {e}")
-        return False

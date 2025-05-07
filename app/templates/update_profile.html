@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="update-profile">
+
+  <div class="update-profile-container">
+    <h2>Update Your Profile</h2>
+
+    <form action="{{ url_for('save_profile') }}" method="POST">
+
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          value="{{ employee['Phone_Number__c'] }}"
+          placeholder="Enter your phone number"
+          title="Your phone number"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value="{{ employee['Username__c'] }}"
+          placeholder="Enter Username"
+          title="Your profile Username"
+        />
+      </div>
+
+      <button type="submit" class="update-btn">Save</button>
+    </form>
+
+    <div class="back-to-dashboard">
+      <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+    </div>
+  </div>
+
+</body>
+</html>

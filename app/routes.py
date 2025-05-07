@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, s
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from app.auth import signup as auth_signup, signin as auth_signin
 from app.auth import authenticate_salesforce
-from app.employee import get_employee_data, create_employee, update_employee, get_employee_data_by_email
+from app.employee import get_employee_data, create_employee, get_employee_data_by_email
 from app.state import employee_users  # Import from app.state instead
 from app.auth import users_collection  # Import users collection from auth.py
 from bs4 import BeautifulSoup
@@ -179,82 +179,43 @@ def create_employee_route():
         return jsonify({"id": new_employee['id']}), 201
     return jsonify({"error": "Salesforce Authentication failed."}), 500
 
-# Update employee (JSON API)
-@app.route('/employees/<employee_id>', methods=['PUT'])
-@jwt_required()
-def update_employee_route(employee_id):
-    data = request.get_json()
-    if sf:
-        updated = update_employee(
-            sf,
-            employee_id,
-            name=data.get('name'),
-            email=data.get('email'),
-            phone_number=data.get('phone')
-        )
-        if updated:
-            return jsonify({"message": "Employee updated successfully"}), 200
-        return jsonify({"error": "Employee not found or failed to update."}), 400
-    return jsonify({"error": "Salesforce Authentication failed."}), 500
 
-# Profile Update Form Page
+# Show update form
 @app.route('/update-profile', methods=['GET'])
-def update_profile_form():
+def update_profile():
     if 'email' not in session:
         return redirect(url_for('signin_page'))
 
-    # Get the user's data from Salesforce (or session if needed)
-    print("SF is available:", bool(sf))
-    print("Salesforce is", "connected" if sf else "not connected")
-
-
     user_email = session.get('email')
-    user_sf_id = employee_users.get(user_email, {}).get('sf_id')
+    employee_data = get_employee_data_by_email(sf, user_email)
 
-    if sf and user_sf_id:
-        employee_data = get_employee_data(sf, user_sf_id)
-        if employee_data:
-            return render_template(
-    'update_profile.html',
-    name=employee_data.get('Name'),
-    email=employee_data.get('Email'),
-    phone=employee_data.get('Phone')
-)
-        return "Employee data not found", 404
-    return "Salesforce not authenticated or user ID missing", 500
+    if not employee_data:
+        return "User not found", 404
 
-# Handle Profile Update Submission
-@app.route('/update-profile', methods=['POST'])
-def update_profile_submit():
+    return render_template('update_profile.html', employee=employee_data)
+
+# Save profile updates
+@app.route('/save-profile', methods=['POST'])
+def save_profile():
     if 'email' not in session:
         return redirect(url_for('signin_page'))
 
-    data = request.form
     user_email = session.get('email')
-    user_sf_id = employee_users.get(user_email, {}).get('sf_id')
+    employee_data = get_employee_data_by_email(sf, user_email)
 
-    if sf and user_sf_id:
-        updated = update_employee(
-            sf,
-            user_sf_id,
-            name=data.get('name'),
-            email=data.get('email'),
-            phone_number=data.get('phone')
-        )
-        if updated:
-            # Update session info
-            session['name'] = data.get('name')
-            session['email'] = data.get('email')
-            session['phone'] = data.get('phone')
+    if not employee_data:
+        return "User not found", 404
 
-            # ✅ Add this to keep the in-memory store consistent
-            employee_users[user_email].update({
-                "name": data.get('name'),
-                "phone_number": data.get('phone')
-            })
-            return redirect(url_for('dashboard'))  # ✅ redirect after successful update
-        return "Update failed", 400
-    return "Salesforce not authenticated or user ID missing", 500
+    record_id = employee_data['Id']
+    #Fields to be updated
+    updated_fields = {
+        'Phone_Number__c': request.form.get('phone'),
+        'Username__c': request.form.get('username')
+    }
+
+    sf.Student__c.update(record_id, updated_fields)
+    return redirect(url_for('dashboard'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
