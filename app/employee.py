@@ -42,7 +42,7 @@ def create_employee(sf, name, email, phone_number, password):
 
 def get_employee_data_by_email(sf, email):
     try:
-        query = f"SELECT Id, Assignment_Completed__c, Date_of_Birth__c, Email__c, Enrollment_Date__c, Final_Grade__c, Full_Name__c, Graduation_Date__c, Instructor_s_Comments__c, Phone_Number__c, Profile_Image__c, Progress_Percentage__c, Skills__c, Status__c, Student_s_Comments__c, Training_Plan__c, Username__c FROM Student__c WHERE Email__c = '{email}' LIMIT 1"
+        query = f"SELECT Id, Assignment_Completed__c, Date_of_Birth__c, Email__c, Enrollment_Date__c, Final_Grade__c, Full_Name__c, Graduation_Date__c, Instructor_s_Comments__c, Phone_Number__c, Profile_Image__c, New_Profile_URL__c, Progress_Percentage__c, Skills__c, Status__c, Student_s_Comments__c, Training_Plan__c, Username__c FROM Student__c WHERE Email__c = '{email}' LIMIT 1"
         result = sf.query(query)
         records = result.get('records', [])
         if records:

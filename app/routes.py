@@ -130,7 +130,7 @@ def dashboard():
         return "User not found in Salesforce", 404
 
     # Use the public image URL directly
-    image_url = employee_data.get('Profile_Image__c')
+    image_url = employee_data.get('New_Profile_URL__c')
 
 
     return render_template(
