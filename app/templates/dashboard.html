@@ -18,6 +18,9 @@
     <form action="{{ url_for('update_profile') }}" method="GET">
       <button type="submit" class="signout-btn">Update Profile</button>
     </form>
+    <form action="{{ url_for('assignment_profile') }}" method="GET">
+      <button type="submit" class="signout-btn">Submit Assignment</button>
+    </form>
   </header>
 
   <main class="dashboard-main">
@@ -60,8 +63,5 @@
       <p><strong>Training Plan:</strong> {{ tplan or 'NA' }}</p>
     </div>
   </main>
-
-
-  
 </body>
 </html>

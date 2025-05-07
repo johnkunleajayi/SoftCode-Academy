@@ -191,8 +191,20 @@ def update_profile():
 
     if not student_data:
         return "User not found", 404
+    
 
-    return render_template('update_profile.html', student=student_data)
+    return render_template('update_profile.html',
+                       student=student_data,
+                       name=student_data['Full_Name__c'],
+                       image_url=student_data['New_Profile_URL__c'],
+                       username=student_data.get('Username__c', ''),
+                       status=student_data.get('Status__c', ''),
+                       phone=student_data.get('Phone_Number__c', ''),
+                       email=student_data.get('Email__c', ''),
+                       assignments_completed=student_data.get('Assignments_Completed__c', 0),
+                       progress=student_data.get('Progress_Percentage__c', 0))
+
+
 
 # Save profile updates
 @app.route('/save-profile', methods=['POST'])
@@ -216,6 +228,60 @@ def save_profile():
     sf.Student__c.update(record_id, updated_fields)
     return redirect(url_for('dashboard'))
 
+
+# Submit Assignment form
+@app.route('/assignment', methods=['GET'])
+def assignment_profile():
+    if 'email' not in session:
+        return redirect(url_for('signin_page'))
+
+    user_email = session.get('email')
+    student_data = get_student_data_by_email(sf, user_email)
+
+    if not student_data:
+        return "User not found", 404
+
+    return render_template('assignment_submission.html',
+                       student=student_data,
+                       name=student_data['Full_Name__c'],
+                       image_url=student_data['New_Profile_URL__c'],
+                       username=student_data.get('Username__c', ''),
+                       status=student_data.get('Status__c', ''),
+                       phone=student_data.get('Phone_Number__c', ''),
+                       email=student_data.get('Email__c', ''),
+                       assignments_completed=student_data.get('Assignments_Completed__c', 0),
+                       progress=student_data.get('Progress_Percentage__c', 0))
+
+
+# Save assignment updates
+@app.route('/assignment-profile', methods=['POST'])
+def assignment_submit():
+    if 'email' not in session:
+        return redirect(url_for('signin_page'))
+
+    user_email = session.get('email')
+    student_data = get_student_data_by_email(sf, user_email)
+
+    if not student_data:
+        return "User not found", 404
+
+    record_id = student_data['Id']
+    #Fields to be updated
+    assignment_fields = {
+        'Week_1_Assignment__c': request.form.get('week1'),
+        'Week_2_Assignment__c': request.form.get('week2'),
+        'Week_3_Assignment__c': request.form.get('week3'),
+        'Week_4_Assignment__c': request.form.get('week4'),
+        'Week_5_Assignment__c': request.form.get('week5'),
+        'Week_6_Assignment__c': request.form.get('week6'),
+        'Week_7_Assignment__c': request.form.get('week7'),
+        'Week_8_Assignment__c': request.form.get('week8'),
+        'Week_9_Assignment__c': request.form.get('week9'),
+        'Week_10_Assignment__c': request.form.get('week10')
+    }
+
+    sf.Student__c.update(record_id, assignment_fields)
+    return redirect(url_for('dashboard'))
 
 if __name__ == "__main__":
     app.run(debug=True)

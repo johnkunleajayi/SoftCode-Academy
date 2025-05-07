@@ -2,14 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Update Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignments Submission - SoftCode Academy</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body class="update-profile">
+<body class="dashboard">
+  <header class="dashboard-header">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='SoftCode Academy.png') }}" alt="SoftCode Academy Logo" />
+    </div>
+    <h1>Hi {{ name }}! </h1>
+  </header>
 
-  <div class="update-profile-container">
-    <h2>Update Your Profile</h2>
+  <main class="dashboard-main">
+    <div class="profile-sidebar">
+      <div class="profile-image">
+        <img src="{{ image_url }}" alt="Profile Picture">
+      </div>
+      <div class="basic-info">
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Username:</strong> {{ username }}</p>
+        <p><strong>Status:</strong> {{ status }}</p>
+      </div>
+    </div>
+
+    <div class="profile-details">
+      <h2>Update Your Profile</h2>
+      <p><strong>Email:</strong> {{ email }}</p>
+      <p><strong>Phone:</strong> {{ phone }}</p>
+      <div class="assignments_completed-container">
+        <div class="assignments_completed-label">
+            Assignments Completed: {{ (assignments_completed or 0)|round(0) }}%
+        </div>
+        <div class="assignments_completed-bar">
+            <div class="assignments_completed-fill" style="width: {{ assignments_completed or 0 }}%;"></div>
+        </div>
+    </div>
+      <div class="progress-container">
+        <div class="progress-label">
+            Linkedin Videos Percentage: {{ (progress or 0)|round(0) }}%
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ progress or 0 }}%;"></div>
+        </div>
+      </div>
 
     <form action="{{ url_for('save_profile') }}" method="POST">
 
