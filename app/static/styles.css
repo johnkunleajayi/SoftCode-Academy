@@ -299,6 +299,15 @@ body.update-profile {
     box-sizing: border-box;
 }
 
+.form-group textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
 .update-btn {
     display: block;
     width: 100%;
