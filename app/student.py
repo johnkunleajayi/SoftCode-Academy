@@ -51,4 +51,3 @@ def get_student_data_by_email(sf, email):
     except Exception as e:
         logger.error(f"Error fetching student by email: {e}")
         return None
-
