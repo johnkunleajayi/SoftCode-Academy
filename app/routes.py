@@ -193,16 +193,30 @@ def update_profile():
         return "User not found", 404
     
 
-    return render_template('update_profile.html',
-                       student=student_data,
-                       name=student_data['Full_Name__c'],
-                       image_url=student_data['New_Profile_URL__c'],
-                       username=student_data.get('Username__c', ''),
-                       status=student_data.get('Status__c', ''),
-                       phone=student_data.get('Phone_Number__c', ''),
-                       email=student_data.get('Email__c', ''),
-                       assignments_completed=student_data.get('Assignments_Completed__c', 0),
-                       progress=student_data.get('Progress_Percentage__c', 0))
+    return render_template(
+    'update_profile.html',
+    student=student_data,
+    name=student_data['Full_Name__c'],
+    image_url=student_data['New_Profile_URL__c'],
+    username=student_data.get('Username__c', ''),
+    status=student_data.get('Status__c', ''),
+    phone=student_data.get('Phone_Number__c', ''),
+    email=student_data.get('Email__c', ''),
+    assignments_completed=student_data.get('Assignments_Completed__c'),
+    url1=student_data.get('Week_1_LinkedIn_URL__c'),
+    url2=student_data.get('Week_2_LinkedIn_URL__c'),
+    url3=student_data.get('Week_3_LinkedIn_URL__c'),
+    url4=student_data.get('Week_4_LinkedIn_URL__c'),
+    url5=student_data.get('Week_5_LinkedIn_URL__c'),
+    url6=student_data.get('Week_6_LinkedIn_URL__c'),
+    url7=student_data.get('Week_7_LinkedIn_URL__c'),
+    url8=student_data.get('Week_8_LinkedIn_URL__c'),
+    url9=student_data.get('Week_9_LinkedIn_URL__c'),
+    url10=student_data.get('Week_10_LinkedIn_URL__c'),
+    
+)
+
+
 
 
 
@@ -222,7 +236,17 @@ def save_profile():
     #Fields to be updated
     updated_fields = {
         'Phone_Number__c': request.form.get('phone'),
-        'Username__c': request.form.get('username')
+        'Username__c': request.form.get('username'),
+        'Week_1_LinkedIn_URL__c': request.form.get('url1'),
+        'Week_2_LinkedIn_URL__c': request.form.get('url2'),
+        'Week_3_LinkedIn_URL__c': request.form.get('url3'),
+        'Week_4_LinkedIn_URL__c': request.form.get('url4'),
+        'Week_5_LinkedIn_URL__c': request.form.get('url5'),
+        'Week_6_LinkedIn_URL__c': request.form.get('url6'),
+        'Week_7_LinkedIn_URL__c': request.form.get('url7'),
+        'Week_8_LinkedIn_URL__c': request.form.get('url8'),
+        'Week_9_LinkedIn_URL__c': request.form.get('url9'),
+        'Week_10_LinkedIn_URL__c': request.form.get('url10')
     }
 
     sf.Student__c.update(record_id, updated_fields)
@@ -277,17 +301,8 @@ def assignment_submit():
         'Week_7_Assignment__c': request.form.get('week7'),
         'Week_8_Assignment__c': request.form.get('week8'),
         'Week_9_Assignment__c': request.form.get('week9'),
-        'Week_10_Assignment__c': request.form.get('week10'),
-        'Week_1_LinkedIn_URL__c': request.form.get('url1'),
-        'Week_2_LinkedIn_URL__c': request.form.get('url2'),
-        'Week_3_LinkedIn_URL__c': request.form.get('url3'),
-        'Week_4_LinkedIn_URL__c': request.form.get('url4'),
-        'Week_5_LinkedIn_URL__c': request.form.get('url5'),
-        'Week_6_LinkedIn_URL__c': request.form.get('url6'),
-        'Week_7_LinkedIn_URL__c': request.form.get('url7'),
-        'Week_8_LinkedIn_URL__c': request.form.get('url8'),
-        'Week_9_LinkedIn_URL__c': request.form.get('url9'),
-        'Week_10_LinkedIn_URL__c': request.form.get('url10')
+        'Week_10_Assignment__c': request.form.get('week10')
+        
     }
 
     sf.Student__c.update(record_id, assignment_fields)
