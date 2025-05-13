@@ -277,7 +277,17 @@ def assignment_submit():
         'Week_7_Assignment__c': request.form.get('week7'),
         'Week_8_Assignment__c': request.form.get('week8'),
         'Week_9_Assignment__c': request.form.get('week9'),
-        'Week_10_Assignment__c': request.form.get('week10')
+        'Week_10_Assignment__c': request.form.get('week10'),
+        'Week_1_LinkedIn_URL__c': request.form.get('url1'),
+        'Week_2_LinkedIn_URL__c': request.form.get('url2'),
+        'Week_3_LinkedIn_URL__c': request.form.get('url3'),
+        'Week_4_LinkedIn_URL__c': request.form.get('url4'),
+        'Week_5_LinkedIn_URL__c': request.form.get('url5'),
+        'Week_6_LinkedIn_URL__c': request.form.get('url6'),
+        'Week_7_LinkedIn_URL__c': request.form.get('url7'),
+        'Week_8_LinkedIn_URL__c': request.form.get('url8'),
+        'Week_9_LinkedIn_URL__c': request.form.get('url9'),
+        'Week_10_LinkedIn_URL__c': request.form.get('url10')
     }
 
     sf.Student__c.update(record_id, assignment_fields)
