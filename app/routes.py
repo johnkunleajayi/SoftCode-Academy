@@ -80,7 +80,7 @@ def signin_form():
                 if sf:
                     student_data = get_student_data_by_email(sf, email)
                     if not student_data:
-                        return "User not found in Salesforce", 404
+                        return "We are working at the Backend at the moment, pls try again later", 404
 
                     user = {
                         "name": student_data["Name"],
@@ -127,7 +127,7 @@ def dashboard():
     student_data = get_student_data_by_email(sf, user_email)
 
     if not student_data:
-        return "User not found in Salesforce", 404
+        return "We are working at the Backend at the moment, pls try again later", 404
 
     # Use the public image URL directly
     image_url = student_data.get('New_Profile_URL__c')
